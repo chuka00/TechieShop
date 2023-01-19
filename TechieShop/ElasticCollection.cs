@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Dynamic;
+﻿using System.Dynamic;
 
 namespace TechieShop
 {
+
+
     class ElasticCollection
     {
         public List<ExpandoObject> Products { get; set; }
@@ -29,28 +26,48 @@ namespace TechieShop
             Products.Add(productObject);
         }
 
-        public void Display(List<string> properties = null)
+        public void Display()
         {
-            if (properties == null)
-            {
-                properties = new List<string>() { "Id", "Name", "Quantity", "Price", "Category", "OrderCount" };
-            }
+            List<string> properties = new List<string>();
+            Console.WriteLine("Select the properties you want to display.\nEnter 'done' when you're finished:");
 
-            foreach (var product in Products)
+            try
             {
-                foreach (var property in properties)
+                string input = "";
+                while (input != "done")
                 {
-                    if (((IDictionary<string, object>)product).ContainsKey(property))
+                    input = Console.ReadLine();
+                    if (input == "Id" || input == "Name" || input == "Quantity" || input == "Price" || input == "Category" || input == "OrderCount")
                     {
-                        Console.Write(((IDictionary<string, object>)product)[property] + ", ");
+                        properties.Add(input);
                     }
-                    else
+                    else if (input != "done")
                     {
-                        Console.Write("property not exists, ");
+                        throw new Exception("Invalid input, please enter a valid property name or 'done'");
                     }
                 }
-                Console.WriteLine();
+
+                foreach (var product in Products)
+                {
+                    foreach (var property in properties)
+                    {
+                        if (((IDictionary<string, object>)product).ContainsKey(property))
+                        {
+                            Console.Write(((IDictionary<string, object>)product)[property] + ", ");
+                        }
+                        else
+                        {
+                            Console.Write("property not exists, ");
+                        }
+                    }
+                    Console.WriteLine();
+                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
+
         }
     }
 }
